@@ -1,140 +1,187 @@
-# PROYECTO FASTAPI CLIENTES
+# Sistema de Gestión SENA - API Unificada 🚀
 
-## Información del estudiante
+## Información del Aprendiz
 
-* Nombre: Alison Valeria Garzón
-* Número de ficha: 3407184
-
----
-
-# Descripción del proyecto
-
-Este proyecto fue desarrollado con FastAPI y permite realizar operaciones CRUD para:
-
-* Clientes
-* Facturas
-* Transacciones
-
-La aplicación permite:
-
-* Crear registros
-* Listar información
-* Editar datos
-* Eliminar registros
+- **Nombre:**Alison Valeria Garzon
+- **Ficha:3407184
+- **Instructor:** Jhony Guerrero
 
 ---
 
-# Estructura de carpetas
+# 🛠️ Descripción del Proyecto
 
-```text
-proyecto_clientes/
+Este proyecto consiste en una **API REST** desarrollada con **FastAPI** y **SQLModel** para administrar **Clientes, Facturas y Transacciones**. La aplicación implementa una arquitectura modular, siguiendo buenas prácticas de programación, validación de datos y persistencia en una base de datos SQLite.
+
+---
+
+# 📐 Arquitectura y Buenas Prácticas Aplicadas
+
+### ✅ Modularización con APIRouter
+Los endpoints se encuentran organizados en módulos independientes dentro de la carpeta `routers`, manteniendo el archivo `main.py` limpio y fácil de mantener.
+
+### ✅ Modelos con SQLModel
+Se utilizan modelos de SQLModel para representar las tablas de la base de datos, combinando las ventajas de SQLAlchemy y Pydantic.
+
+### ✅ Validación Automática
+Los datos enviados por el cliente son validados automáticamente mediante Pydantic, garantizando la integridad de la información.
+
+### ✅ Persistencia de Datos
+La información se almacena en una base de datos SQLite utilizando sesiones (`Session`) y un motor (`Engine`) configurados en `conexion_bd.py`.
+
+### ✅ Integridad Referencial
+Las tablas Facturas y Transacciones incluyen llaves foráneas hacia la tabla Clientes para mantener relaciones consistentes.
+
+---
+
+# 📂 Estructura del Proyecto
+
+```
+PROYECTO_CLIENTES_FASTAPI/
 │
-├── app/
-│   ├── __init__.py
-│   ├── main.py
-│   ├── database.py
-│   │
-│   ├── models/
-│   │   ├── __init__.py
-│   │   ├── clientes.py
-│   │   └── facturas.py
-│   │
-│   └── routers/
-│       ├── __init__.py
-│       └── clientes.py
-│
-├── venv/
+├── .gitignore
 ├── requirements.txt
 ├── README.md
-└── .gitignore
+│
+└── app/
+    ├── __init__.py
+    ├── main.py
+    ├── conexion_bd.py
+    ├── models/
+    │   ├── clientes.py
+    │   ├── facturas.py
+    │   └── transacciones.py
+    └── routers/
+        ├── clientes.py
+        ├── facturas.py
+        └── transacciones.py
 ```
 
 ---
 
-# Historial de actividades realizadas
+# 💾 Implementación de Persistencia con SQLModel
 
-1. Creación de la carpeta principal del proyecto.
-2. Creación y activación del entorno virtual.
-3. Instalación de FastAPI y Uvicorn.
-4. Organización de carpetas y archivos.
-5. Creación de modelos con Pydantic.
-6. Desarrollo de endpoints CRUD:
-  * Clientes
-  * Facturas
-  * Transacciones
-7. Pruebas de funcionamiento en Swagger.
-8. Configuración de Git y GitHub.
-9. Creación del archivo README.md.
-10. Configuración del archivo .gitignore.
+## Configuración de Base de Datos
+
+- Implementación de `create_engine()`.
+- Uso de `Session` para gestionar las operaciones sobre la base de datos.
+- Base de datos SQLite.
+- Configuración de `check_same_thread=False`.
+- Creación automática de tablas mediante `crear_bd()`.
 
 ---
 
-# Instalación del proyecto
+## Modelos
 
-## Clonar el repositorio
+Se implementaron los modelos:
 
-```bash
-git clone URL_DEL_REPOSITORIO
-```
+- Cliente
+- Factura
+- Transacción
 
-## Entrar a la carpeta
+Cada modelo utiliza:
 
-```bash
-cd proyecto_clientes
-```
-
----
-
-# Crear entorno virtual
-
-```bash
-python -m venv venv
-```
+- `SQLModel`
+- `Field`
+- Llaves primarias
+- Llaves foráneas
+- Relaciones entre tablas
 
 ---
 
-# Activar entorno virtual
+## Routers
 
-## En Git Bash
+Cada módulo implementa un CRUD completo:
 
-```bash
-source venv/Scripts/activate
-```
+### Clientes
 
-## En PowerShell
+- Crear cliente
+- Consultar clientes
+- Consultar cliente por ID
+- Actualizar cliente
+- Eliminar cliente
 
-```powershell
-.\venv\Scripts\Activate
-```
+### Facturas
+
+- Crear factura
+- Consultar facturas
+- Consultar factura por ID
+- Actualizar factura
+- Eliminar factura
+
+### Transacciones
+
+- Crear transacción
+- Consultar transacciones
+- Consultar transacción por ID
+- Actualizar transacción
+- Eliminar transacción
 
 ---
 
-# Instalar dependencias
+# 🚀 Tecnologías Utilizadas
+
+- Python 3
+- FastAPI
+- SQLModel
+- SQLAlchemy
+- SQLite
+- Uvicorn
+- Pydantic
+
+---
+
+# ▶️ Ejecución del Proyecto
+
+Instalar dependencias:
 
 ```bash
 pip install -r requirements.txt
 ```
 
----
-
-# Ejecutar el servidor
+Ejecutar la aplicación:
 
 ```bash
 uvicorn app.main:app --reload
 ```
 
----
+Abrir la documentación automática:
 
-# Abrir en el navegador
-
-## API
-
-```text
-http://127.0.0.1:8000
 ```
-
-## Documentación Swagger
-
-```text
 http://127.0.0.1:8000/docs
 ```
+
+Documentación alternativa:
+
+```
+http://127.0.0.1:8000/redoc
+```
+
+---
+
+# 📌 Estado del Proyecto
+
+✅ Proyecto completamente funcional.
+
+Incluye:
+
+- API REST
+- Persistencia en SQLite
+- CRUD completo
+- Validación de datos
+- Arquitectura modular
+- Integridad referencial entre tablas
+- Documentación automática con Swagger
+
+---
+
+# 👩‍💻 Desarrollado por
+
+**Alison Valeria**
+
+**SENA - Análisis y Desarrollo de Software**
+
+**Instructor:** Jhony Guerrero
+
+---
+
+## ¡Gracias Instructor Jhony Guerrero!
