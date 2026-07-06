@@ -23,4 +23,11 @@ class TransaccionRead(SQLModel):
     cantidad: int
     valor_unitario: float
     descripcion: Optional[str] = None
-    total: float # <-- Aquí le avisamos a FastAPI que mostraremos el total
+    total: float
+    subtotal: float  # Subtotal de la factura (suma de transacciones)
+    valor_total: float  # Valor total de la factura (monto de la factura)
+
+# Clase para la lista de transacciones con total general
+class ListaTransacciones(SQLModel):
+    transacciones: list[TransaccionRead]
+    total_general: float

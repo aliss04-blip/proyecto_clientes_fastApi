@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from routers import clientes, facturas, transacciones
 from app.conexion_bd import crear_bd
 
-app = FastAPI(title="API de Jhoan")
+app = FastAPI(title="API Alisson")
 
 @app.on_event("startup")
 def on_startup():

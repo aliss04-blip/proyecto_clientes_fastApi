@@ -1,19 +1,35 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
-from app.modelos.Transacciones import Transaccion, TransaccionCrear, TransaccionRead # <--- IMPORTANTE: Importa TransaccionRead
+from app.modelos.Transacciones import Transaccion, TransaccionCrear, TransaccionRead, ListaTransacciones # <--- IMPORTANTE: Importa TransaccionRead y ListaTransacciones
 from app.conexion_bd import get_session
 from app.modelos.Facturas import Factura # Asegúrate de que esta ruta sea la correcta
 
-router = APIRouter()
+router = APIRouter(
+    prefix="/transacciones",
+    tags=["transacciones"]
+)
 
-@router.get("/", response_model=list[TransaccionRead])
+@router.get("/", response_model=ListaTransacciones)
 def listar_transacciones(session: Session = Depends(get_session)):
     transacciones = session.exec(select(Transaccion)).all()
+
     resultado = []
-    
-    # Creamos un TransaccionRead por cada registro y calculamos el total aquí
+    total_general = 0
+
     for t in transacciones:
-        total_calculado = t.cantidad * t.valor_unitario
+        total = t.cantidad * t.valor_unitario
+        total_general += total
+
+        # Calcular subtotal de la factura (suma de todas las transacciones de esa factura)
+        transacciones_factura = session.exec(
+            select(Transaccion).where(Transaccion.factura_id == t.factura_id)
+        ).all()
+        subtotal = sum(tr.cantidad * tr.valor_unitario for tr in transacciones_factura)
+        
+        # Obtener el valor total (monto) de la factura
+        factura = session.get(Factura, t.factura_id)
+        valor_total = factura.monto if factura else 0
+
         resultado.append(
             TransaccionRead(
                 id=t.id,
@@ -21,10 +37,16 @@ def listar_transacciones(session: Session = Depends(get_session)):
                 cantidad=t.cantidad,
                 valor_unitario=t.valor_unitario,
                 descripcion=t.descripcion,
-                total=total_calculado
+                total=total,
+                subtotal=subtotal,
+                valor_total=valor_total
             )
         )
-    return resultado
+
+    return ListaTransacciones(
+        transacciones=resultado,
+        total_general=total_general
+    )
 
 @router.post("/", response_model=TransaccionRead)
 def crear_transaccion(datos_transaccion: TransaccionCrear, session: Session = Depends(get_session)):
@@ -39,13 +61,22 @@ def crear_transaccion(datos_transaccion: TransaccionCrear, session: Session = De
     
     # Retornamos directamente el modelo de lectura con el cálculo
     total_calculado = transaccion.cantidad * transaccion.valor_unitario
+    
+    # Calcular subtotal de la factura
+    transacciones_factura = session.exec(
+        select(Transaccion).where(Transaccion.factura_id == transaccion.factura_id)
+    ).all()
+    subtotal = sum(tr.cantidad * tr.valor_unitario for tr in transacciones_factura)
+    
     return TransaccionRead(
         id=transaccion.id,
         factura_id=transaccion.factura_id,
         cantidad=transaccion.cantidad,
         valor_unitario=transaccion.valor_unitario,
         descripcion=transaccion.descripcion,
-        total=total_calculado
+        total=total_calculado,
+        subtotal=subtotal,
+        valor_total=factura.monto
     )
 
 @router.get("/{id}", response_model=TransaccionRead)
@@ -56,13 +87,26 @@ def obtener_transaccion(id: int, session: Session = Depends(get_session)):
     
     # Retornamos directamente el modelo de lectura
     total_calculado = transaccion.cantidad * transaccion.valor_unitario
+    
+    # Calcular subtotal de la factura
+    transacciones_factura = session.exec(
+        select(Transaccion).where(Transaccion.factura_id == transaccion.factura_id)
+    ).all()
+    subtotal = sum(tr.cantidad * tr.valor_unitario for tr in transacciones_factura)
+    
+    # Obtener el valor total (monto) de la factura
+    factura = session.get(Factura, transaccion.factura_id)
+    valor_total = factura.monto if factura else 0
+    
     return TransaccionRead(
         id=transaccion.id,
         factura_id=transaccion.factura_id,
         cantidad=transaccion.cantidad,
         valor_unitario=transaccion.valor_unitario,
         descripcion=transaccion.descripcion,
-        total=total_calculado
+        total=total_calculado,
+        subtotal=subtotal,
+        valor_total=valor_total
     )
 
 @router.put("/{id}", response_model=TransaccionRead)
@@ -86,13 +130,22 @@ def actualizar_transaccion(id: int, datos_transaccion: TransaccionCrear, session
     
     # Retornamos el modelo de lectura actualizado
     total_calculado = transaccion.cantidad * transaccion.valor_unitario
+    
+    # Calcular subtotal de la factura
+    transacciones_factura = session.exec(
+        select(Transaccion).where(Transaccion.factura_id == transaccion.factura_id)
+    ).all()
+    subtotal = sum(tr.cantidad * tr.valor_unitario for tr in transacciones_factura)
+    
     return TransaccionRead(
         id=transaccion.id,
         factura_id=transaccion.factura_id,
         cantidad=transaccion.cantidad,
         valor_unitario=transaccion.valor_unitario,
         descripcion=transaccion.descripcion,
-        total=total_calculado
+        total=total_calculado,
+        subtotal=subtotal,
+        valor_total=factura.monto
     )
 
 @router.delete("/{id}")
