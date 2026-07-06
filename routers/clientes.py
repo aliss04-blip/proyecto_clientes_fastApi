@@ -46,6 +46,8 @@ def actualizar_cliente(id: int, datos_cliente: ClienteCrear, session: Session = 
 
     cliente.nombre = datos_cliente.nombre
     cliente.edad = datos_cliente.edad
+    cliente.email = datos_cliente.email
+    cliente.telefono = datos_cliente.telefono
     cliente.descripcion = datos_cliente.descripcion
 
     session.add(cliente)
