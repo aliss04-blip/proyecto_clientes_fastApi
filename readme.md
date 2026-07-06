@@ -171,6 +171,8 @@ Incluye:
 - Arquitectura modular
 - Integridad referencial entre tablas
 - Documentación automática con Swagger
+- CORS habilitado
+- Búsqueda de clientes por nombre
 
 ---
 
