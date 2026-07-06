@@ -14,4 +14,4 @@ app.include_router(transacciones.router)
 
 @app.get("/")
 def root():
-    return {"mensaje": "Jhoan API - Hola mundo"}
+    return {"mensaje": "Alisonn API - Hola mundo"}
