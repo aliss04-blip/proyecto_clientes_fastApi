@@ -78,6 +78,12 @@ def actualizar_factura(id: int, datos_factura: FacturaCrear, session: Session = 
     session.refresh(factura)
     return factura
 
+@router.get("/cliente/{cliente_id}", response_model=list[FacturaConDetalles])
+def listar_facturas_por_cliente(cliente_id: int, session: Session = Depends(get_session)):
+    facturas = session.exec(select(Factura).where(Factura.cliente_id == cliente_id)).all()
+    return facturas
+
+
 @router.delete("/{id}")
 def eliminar_factura(id: int, session: Session = Depends(get_session)):
     factura = session.get(Factura, id)
