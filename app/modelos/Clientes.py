@@ -5,6 +5,8 @@ class Cliente(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     nombre: str
     edad: int
+    email: Optional[str] = None
+    telefono: Optional[str] = None
     descripcion: Optional[str] = None
 
     # Relación inversa: Un cliente puede tener muchas facturas
@@ -13,4 +15,6 @@ class Cliente(SQLModel, table=True):
 class ClienteCrear(SQLModel):
     nombre: str
     edad: int
+    email: Optional[str] = None
+    telefono: Optional[str] = None
     descripcion: Optional[str] = None
