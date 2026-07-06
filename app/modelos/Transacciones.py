@@ -12,8 +12,8 @@ class Transaccion(SQLModel, table=True):
 
 class TransaccionCrear(SQLModel):
     factura_id: int
-    cantidad: int
-    valor_unitario: float
+    cantidad: int = Field(gt=0, description="La cantidad debe ser mayor a 0")
+    valor_unitario: float = Field(gt=0, description="El valor unitario debe ser mayor a 0")
     descripcion: Optional[str] = None
 
 # --- AGREGA ESTA NUEVA CLASE AQUÍ ABAJO ---
