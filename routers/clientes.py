@@ -57,6 +57,12 @@ def actualizar_cliente(id: int, datos_cliente: ClienteCrear, session: Session = 
     return cliente
 
 
+@router.get("/buscar/{nombre}", response_model=list[Cliente])
+def buscar_cliente(nombre: str, session: Session = Depends(get_session)):
+    clientes = session.exec(select(Cliente).where(Cliente.nombre.contains(nombre))).all()
+    return clientes
+
+
 @router.delete("/{id}")
 def eliminar_cliente(id: int, session: Session = Depends(get_session)):
     cliente = session.get(Cliente, id)
